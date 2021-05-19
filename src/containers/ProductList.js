@@ -18,16 +18,13 @@ class ProductList extends React.Component {
         this.setState({ loading: true})
         axios.get(productListUrl)
         .then(res => {
+            console.log(res.data)
             this.setState({data: res.data, loading: false})
         })
     .catch(err => {
         this.setState({error:  err})
     })
 }
-
-
-
-
     render (){
         const {data, error, loading} = this.state
         return (
@@ -50,23 +47,27 @@ class ProductList extends React.Component {
     )}
         
   <Item.Group divided>
-    <Item>
-      <Item.Image src='/images/wireframe/image.png' />
-      <Item.Content>
-        <Item.Header as='a'>My Neighbor Totoro</Item.Header>
-        <Item.Meta>
-          <span className='cinema'>IFC Cinema</span>
-        </Item.Meta>
-        <Item.Description>{paragraph}</Item.Description>
-        <Item.Extra>
-          <Button primary floated='right' icon labelPosition="right">
-            Add to cart
-            <Icon name='shopping cart' />
-          </Button>
-          <Label>Limited</Label>
-        </Item.Extra>
-      </Item.Content>
-    </Item>
+      {data.map(item => {
+          return <Item key={item.id}>
+          <Item.Image src={item.image} />
+          <Item.Content>
+            <Item.Header as='a'>{item.title}</Item.Header>
+            <Item.Meta>
+              <span className='cinema'>{item.category}</span>
+            </Item.Meta>
+            <Item.Description>{item.description}</Item.Description>
+            <Item.Extra>
+              <Button primary floated='right' icon labelPosition="right">
+                Add to cart
+                <Icon name='shopping cart' />
+              </Button>
+              
+              <Label color={item.label === "primary" ? "blue": item.label === "secondary" ? "green": "red"}>{item.Label}</Label>
+            </Item.Extra>
+          </Item.Content>
+        </Item>
+    })}
+    
   </Item.Group>
   </Container>
         )
